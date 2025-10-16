@@ -6,5 +6,14 @@ export interface IVeterinario extends Document {
     password: string,
     edad: number,
     slug: string,
-    status: boolean
+    status: boolean,
+    token: string,
+    confirmado: boolean
+}
+
+export type email_confirm_user = {
+    nombre: string,
+    apellidos: string,
+    email: string,
+    token: string
 }

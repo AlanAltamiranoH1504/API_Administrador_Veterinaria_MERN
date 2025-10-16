@@ -42,6 +42,14 @@ const veterinarioSchema = new Schema<IVeterinario>({
     status: {
         type: Boolean,
         default: true
+    },
+    token: {
+        type: String,
+        nullable: true
+    },
+    confirmado: {
+        type: Boolean,
+        default: false
     }
 }, {
     timestamps: true
