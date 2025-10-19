@@ -15,6 +15,9 @@ const CreateVeterinarioRequest = [
         .notEmpty().withMessage("El email es obligatorio")
         .isEmail().withMessage("Formato de email no valido")
         .isString().withMessage("Formato de email no valido"),
+    body("telefono")
+        .isString().withMessage("El numero de telefono debe ser una cadena de numeros")
+        .isLength({min: 10}).withMessage("El numero debe tener al menos 10 caracteres (55 1234 5678)"),
     body("password")
         .notEmpty().withMessage("El password es obligatorio")
         .isString().withMessage("El password no valido")
@@ -43,6 +46,41 @@ const CreateVeterinarioRequest = [
     }
 ];
 
+const ConfirmVeterinarioRquest = [
+    body("token_confirmacion")
+        .notEmpty().withMessage("El token de confirmacion es obligatorio")
+        .isString().withMessage("El token de confirmacion debe ser una cadena de caracteres"),
+    body("email_veterinario")
+        .notEmpty().withMessage("El email del veterinario es obligatorio")
+        .isEmail().withMessage("El formato del email no es valido"),
+    async (req: Request, res: Response, next: NextFunction) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(409).json(errors.array());
+        }
+
+        // * Busqueda de veterinario pendiente de confirmacion
+        const veterinario_to_confirm = await Veterinario.findOne({
+            email: req.body.email_veterinario,
+            token_confirmacion: req.body.token_confirmacion,
+            confirmado: false
+        });
+
+        if (!veterinario_to_confirm) {
+            return res.status(404).json({
+                status: false,
+                message: "No existe ningun veterinario por confirmar con los datos enviados"
+            });
+        }
+
+        veterinario_to_confirm.token_confirmacion = null;
+        veterinario_to_confirm.confirmado = true;
+        await veterinario_to_confirm.save();
+        next();
+    }
+];
+
 export {
-    CreateVeterinarioRequest
+    CreateVeterinarioRequest,
+    ConfirmVeterinarioRquest
 }

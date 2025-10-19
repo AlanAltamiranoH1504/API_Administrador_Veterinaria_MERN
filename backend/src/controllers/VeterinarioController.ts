@@ -2,8 +2,8 @@ import {Request, Response} from "express";
 import {Veterinario} from "../models/Veterinario";
 import bcrypt from "bcrypt";
 import {v4 as uuidv4} from "uuid";
-import { email_confirm_user } from "../types";
-import { email_confirm_user_function } from "../utils/Emails";
+import {email_confirm_user} from "../types";
+import {email_confirm_user_function} from "../utils/Emails";
 
 export class VeterinarioController {
     public prueba(req: Request, res: Response) {
@@ -24,13 +24,14 @@ export class VeterinarioController {
                 email,
                 password: password_hash,
                 edad,
+                telefono: req.body.telefono ? req.body.telefono : null,
                 slug: uuidv4(),
-                token: token_confirm_user,
+                token_confirmacion: token_confirm_user,
             });
             const data: email_confirm_user = {
                 nombre,
                 apellidos,
-                email, 
+                email,
                 token: token_confirm_user
             }
             await email_confirm_user_function(data);
@@ -43,6 +44,21 @@ export class VeterinarioController {
             return res.status(500).json({
                 status: false,
                 message: "Error en creacion de veterinario",
+                error: e.message
+            });
+        }
+    }
+
+        public async confirm_veterinario(req: Request, res: Response) {
+        try {
+            return res.status(200).json({
+                status: true,
+                message: "Tu perfil ha sido confirmador correctamente ✅"
+            });
+        } catch (e) {
+            return res.status(500).json({
+                status: false,
+                message: "Error en confirmacion de veterinario",
                 error: e.message
             });
         }

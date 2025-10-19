@@ -22,6 +22,12 @@ const veterinarioSchema = new Schema<IVeterinario>({
         trim: true,
         unique: true
     },
+    telefono: {
+        type: String,
+        required: false,
+        trim: true,
+        nullable: true
+    },
     password: {
         type: String,
         required: true,
@@ -43,7 +49,11 @@ const veterinarioSchema = new Schema<IVeterinario>({
         type: Boolean,
         default: true
     },
-    token: {
+    token_confirmacion: {
+        type: String,
+        nullable: true
+    },
+    token_reset_password: {
         type: String,
         nullable: true
     },
