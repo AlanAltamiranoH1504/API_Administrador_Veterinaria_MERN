@@ -1,11 +1,11 @@
-import {Request, Response} from "express";
+import {NextFunction, Request, Response} from "express";
 import {generate_jwt} from "../types";
 import {Veterinario} from "../models/Veterinario";
 import {generate_jwt_function} from "../utils/Jwt";
 
 export class AuthController {
 
-    public prueba(req: Request, res: Response) {
+    public async prueba(req: Request, res: Response, next: NextFunction) {
         res.status(200).json({
             status: true,
             message: "Funcionando controlador auth"
