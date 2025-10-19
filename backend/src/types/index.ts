@@ -20,6 +20,13 @@ export type email_confirm_user = {
     token: string
 }
 
+export type email_to_reset_password = {
+    nombre: string,
+    apellidos: string,
+    email: string,
+    token: string
+}
+
 export type generate_jwt = {
     nombre: string,
     email: string,

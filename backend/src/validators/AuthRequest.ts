@@ -1,5 +1,5 @@
 import {Request, Response, NextFunction} from "express";
-import {body, validationResult} from "express-validator";
+import {body, check, validationResult} from "express-validator";
 import {Veterinario} from "../models/Veterinario";
 import bcrypt from "bcrypt";
 
@@ -48,6 +48,73 @@ const LoginRequest = [
     }
 ];
 
+const SendEmailToResetPassRequest = [
+    body("email")
+        .notEmpty().withMessage("El email de usuario es obligatorio")
+        .isEmail().withMessage("El formato del email no es valido"),
+
+    async (req: Request, res: Response, next: NextFunction) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json(errors.array());
+        }
+        // * Busqueda de usuario
+        const user_to_reset = await Veterinario.findOne({
+            email: req.body.email
+        });
+
+        if (!user_to_reset) {
+            return res.status(404).json({
+                status: false,
+                message: `No se encuentra ningun usuario registrado con el email ${req.body.email}`,
+            });
+        }
+
+        if (!user_to_reset.confirmado) {
+            return res.status(403).json({
+                status: false,
+                message: "El usuario aun no ha confirmado su cuenta, por lo cual no puede hacer cambio de su password"
+            });
+        }
+        next();
+    }
+];
+
+const SaveNewPasswordRequest = [
+    body("password")
+        .notEmpty().withMessage("El password nuevo es obligatorio")
+        .isString().withMessage("El password nuevo debe ser una cadena de caracteres")
+        .isLength({min: 6}).withMessage("El password debe tener al menos 6 caracteres"),
+    check("password")
+        .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.#_-])[A-Za-z\d@$!%*?&.#_-]{8,}$/)
+        .withMessage("El password debe tener al menos una mayúscula, una minúscula, un número y un carácter especial"),
+    body("token")
+        .notEmpty().withMessage("El token de reset es obligatorio")
+        .isString().withMessage("El token de reset no es valido"),
+
+    async (req: Request, res: Response, next: NextFunction) => {
+        const error = validationResult(req);
+        if (!error.isEmpty()) {
+            return res.status(409).json(error.array());
+        }
+
+        // * Busqueda de usuario para hacer reset
+        const user_to_reset = await Veterinario.findOne({
+            token_reset_password: req.body.token,
+            confirmado: true
+        });
+        if (!user_to_reset) {
+            return res.status(404).json({
+                status: false,
+                message: "No se encuentra ningun usuario con los datos ingresados para reset de password"
+            });
+        }
+        next();
+    }
+]
+
 export {
-    LoginRequest
+    LoginRequest,
+    SendEmailToResetPassRequest,
+    SaveNewPasswordRequest
 }

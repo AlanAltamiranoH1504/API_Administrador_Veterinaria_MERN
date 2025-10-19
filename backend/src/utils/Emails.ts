@@ -1,7 +1,7 @@
-import nodemailer, { SendMailOptions, Transporter} from "nodemailer"
-import { email_confirm_user } from "../types"
+import nodemailer, {SendMailOptions, Transporter} from "nodemailer"
+import {email_confirm_user, email_to_reset_password} from "../types"
 
-export const email_confirm_user_function = async (data: email_confirm_user)  => {
+export const email_confirm_user_function = async (data: email_confirm_user) => {
     const transporter: Transporter = nodemailer.createTransport({
         host: process.env.NODEMAILER_HOST,
         port: +process.env.NODEMAILER_HOST,
@@ -39,6 +39,44 @@ export const email_confirm_user_function = async (data: email_confirm_user)  => 
                </p>
             </div>
 
+        `
+    }
+    await transporter.sendMail(email_options);
+}
+
+export const email_to_reset_password_function = async (data: email_to_reset_password) => {
+    const transporter: Transporter = nodemailer.createTransport({
+        host: process.env.NODEMAILER_HOST,
+        port: +process.env.NODEMAILER_PORT,
+        auth: {
+            user: process.env.NODEMAILER_USER,
+            pass: process.env.NODEMIALER_PASSWORD
+        }
+    });
+    const email_options: SendMailOptions = {
+        from: process.env.EMAIL_APP,
+        to: data.email,
+        subject: "Actualiza tu contraseña",
+        text: "Actualiza tu contraseña",
+        html: `
+             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; background-color: #f8f8f8; border-radius: 10px;">
+                <h2 style="color: #2c3e50;">Hola ${data.nombre},</h2>
+                <p style="font-size: 16px; color: #333;">
+                    Has solicitado restablecer tu password en <strong>Administrador de Veterinaria</strong>. Para reestablecerla, por favor haz clic en el siguiente enlace:
+                </p>
+                <p style="text-align: center; margin: 30px 0;">
+                    <a href="${process.env.FRONTEND_URL}/auth/olvide-password/${data.token}" 
+                       style="display: inline-block; padding: 12px 25px; background-color: #3498db; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                        Recuperar Password
+                    </a>
+                </p>
+                <p style="font-size: 14px; color: #666;">
+                    Si tú no solicitaste restablecer tu password, puedes ignorar este mensaje sin problemas.
+                </p>
+                <p style="font-size: 14px; color: #999; margin-top: 40px;">
+                    &copy; ${new Date().getFullYear()} Administrador de Veterinaria. Todos los derechos reservados.
+                </p>
+            </div>
         `
     }
     await transporter.sendMail(email_options);
