@@ -2,6 +2,7 @@ import express from "express";
 import {conexion_db_mongo} from "./config/DbConnection";
 import pacientesRouter from "./routers/PacientesRouter";
 import veterinarioRouter from "./routers/VeterinarioRouter";
+import authRouter from "./routers/AuthRouter";
 
 const app = express();
 
@@ -14,6 +15,7 @@ conexion_db_mongo().then(() => {
 
 app.use("/pacientes", pacientesRouter);
 app.use("/veterinarios", veterinarioRouter);
+app.use("/auth", authRouter);
 
 
 export default app;

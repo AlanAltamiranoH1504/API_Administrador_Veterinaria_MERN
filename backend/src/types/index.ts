@@ -19,3 +19,9 @@ export type email_confirm_user = {
     email: string,
     token: string
 }
+
+export type generate_jwt = {
+    nombre: string,
+    email: string,
+    _id: string,
+}

@@ -49,7 +49,7 @@ export class VeterinarioController {
         }
     }
 
-        public async confirm_veterinario(req: Request, res: Response) {
+    public async confirm_veterinario(req: Request, res: Response) {
         try {
             return res.status(200).json({
                 status: true,
