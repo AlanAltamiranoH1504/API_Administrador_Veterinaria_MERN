@@ -60,9 +60,38 @@ const FindPacienteRequest = [
         }
         next();
     }
-]
+];
+
+const UpdatePacienteRequest = [
+    body("nombre")
+        .notEmpty().withMessage("El nombre del paciente es obligatorio")
+        .isString().withMessage("El nombre del paciente debe ser una cadena de texto"),
+    body("propietario")
+        .notEmpty().withMessage("El nombre del propiertario es obligatorio")
+        .isString().withMessage("El nombre del propitario debe ser una cadena de texto"),
+    body("email_propietario")
+        .notEmpty().withMessage("El email del propietario es obligatorio")
+        .isEmail().withMessage("Formato de email no valido"),
+    body("telefono_propietario")
+        .notEmpty().withMessage("El telefono del propietario de es obligatorio")
+        .isNumeric().withMessage("El formato del telefono no es valido"),
+    body("sintomas")
+        .notEmpty().withMessage("Los sintomas iniciales son obligatorios")
+        .isString().withMessage("Los sintomas debe ser una cadena de texto"),
+    body("status")
+        .notEmpty().withMessage("El status es obligatorio")
+        .isString().withMessage("El status debe ser una cadena de texto"),
+    async (req: Request, res: Response, next: NextFunction) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(409).json(errors.array());
+        }
+        next();
+    }
+];
 
 export {
     CreatePacienteRequest,
-    FindPacienteRequest
+    FindPacienteRequest,
+    UpdatePacienteRequest
 }
