@@ -2,7 +2,7 @@ function App() {
 
     return (
         <>
-            <h2 className="text-center">Hola Mundo</h2>
+            <h2 className="text-center">Hola Mundo desde 2026</h2>
         </>
     )
 }

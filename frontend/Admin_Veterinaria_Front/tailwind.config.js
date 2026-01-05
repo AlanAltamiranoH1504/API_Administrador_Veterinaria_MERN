@@ -5,7 +5,11 @@ export default {
         "src/**/*.{js,ts,tsx,jsx}"
     ],
     theme: {
-        extend: {},
+        extend: {
+            fontFamily: {
+                varela: ['"Varela Round"', 'sans-serif'],
+            }
+        },
     },
     plugins: [],
 }

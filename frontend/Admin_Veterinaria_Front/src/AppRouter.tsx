@@ -1,0 +1,23 @@
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {AuthLayout} from "./layouts/AuthLayout.tsx";
+import {LoginAdmin} from "./views/auth/LoginAdmin.tsx";
+import {RegisterAdmin} from "./views/auth/RegisterAdmin.tsx";
+import {ConfirmAccount} from "./views/auth/ConfirmAccount.tsx";
+import {ForgetPassword} from "./views/auth/ForgetPassword.tsx";
+
+export const AppRouter = () => {
+    return (
+        <>
+            <BrowserRouter>
+                <Routes>
+                    <Route element={<AuthLayout/>}>
+                        <Route path="/" element={<LoginAdmin/>}></Route>
+                        <Route path="/register" element={<RegisterAdmin/>}></Route>
+                        <Route path="/confirm-account/:id" element={<ConfirmAccount/>}></Route>
+                        <Route path="/forget-password" element={<ForgetPassword/>}></Route>
+                    </Route>
+                </Routes>
+            </BrowserRouter>
+        </>
+    );
+}
