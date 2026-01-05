@@ -3,10 +3,13 @@ import {conexion_db_mongo} from "./config/DbConnection";
 import pacientesRouter from "./routers/PacientesRouter";
 import veterinarioRouter from "./routers/VeterinarioRouter";
 import authRouter from "./routers/AuthRouter";
+import {corsConfiguration} from "./config/CORS";
+import cors from "cors";
 
 const app = express();
 
 app.use(express.json());
+app.use(cors(corsConfiguration));
 conexion_db_mongo().then(() => {
     console.log("CONEXIÓN CORRECTA A BASE DE DATOS");
 }).catch((error) => {
