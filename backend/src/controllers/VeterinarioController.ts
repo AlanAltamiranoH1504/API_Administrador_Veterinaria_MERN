@@ -2,6 +2,7 @@ import {Request, Response} from "express";
 import {Veterinario} from "../models/Veterinario";
 import bcrypt from "bcrypt";
 import {v4 as uuidv4} from "uuid";
+import * as crypto from "node:crypto";
 import {email_confirm_user} from "../types";
 import {email_confirm_user_function} from "../utils/Emails";
 
@@ -18,6 +19,7 @@ export class VeterinarioController {
             const {nombre, apellidos, email, password, edad} = req.body;
             const password_hash = await bcrypt.hash(password, 10);
             const token_confirm_user = uuidv4();
+            const six_digit_token = crypto.randomBytes(3).toString("hex");
             const veterinario_to_save = await Veterinario.create({
                 nombre,
                 apellidos,
@@ -27,12 +29,14 @@ export class VeterinarioController {
                 telefono: req.body.telefono ? req.body.telefono : null,
                 slug: uuidv4(),
                 token_confirmacion: token_confirm_user,
+                six_digit_token: six_digit_token
             });
             const data: email_confirm_user = {
                 nombre,
                 apellidos,
                 email,
-                token: token_confirm_user
+                token: token_confirm_user,
+                six_digit_token: six_digit_token
             }
             await email_confirm_user_function(data);
 

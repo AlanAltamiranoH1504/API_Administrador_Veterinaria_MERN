@@ -4,3 +4,7 @@ export const responseRegisterVeterinario = z.object({
     status: z.boolean(),
     message: z.string()
 });
+export const responseGeneralVeterinario = z.object({
+    status: z.boolean(),
+    message: z.string()
+});

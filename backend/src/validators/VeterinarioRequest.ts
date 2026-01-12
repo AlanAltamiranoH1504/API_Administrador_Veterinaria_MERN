@@ -50,9 +50,11 @@ const ConfirmVeterinarioRquest = [
     body("token_confirmacion")
         .notEmpty().withMessage("El token de confirmacion es obligatorio")
         .isString().withMessage("El token de confirmacion debe ser una cadena de caracteres"),
-    body("email_veterinario")
-        .notEmpty().withMessage("El email del veterinario es obligatorio")
-        .isEmail().withMessage("El formato del email no es valido"),
+    body("six_digit_token")
+        .notEmpty().withMessage("El token de seis digitos es obligatorio")
+        .isString().withMessage("El token de seis digitos no es valido")
+        .isLength({min: 6, max: 6}).withMessage("Longitud de token no valida"),
+
     async (req: Request, res: Response, next: NextFunction) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -61,8 +63,8 @@ const ConfirmVeterinarioRquest = [
 
         // * Busqueda de veterinario pendiente de confirmacion
         const veterinario_to_confirm = await Veterinario.findOne({
-            email: req.body.email_veterinario,
             token_confirmacion: req.body.token_confirmacion,
+            six_digit_token: req.body.six_digit_token,
             confirmado: false
         });
 
@@ -75,6 +77,7 @@ const ConfirmVeterinarioRquest = [
 
         veterinario_to_confirm.token_confirmacion = null;
         veterinario_to_confirm.confirmado = true;
+        veterinario_to_confirm.six_digit_token = null;
         await veterinario_to_confirm.save();
         next();
     }

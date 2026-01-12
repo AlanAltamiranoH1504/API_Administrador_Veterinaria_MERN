@@ -1,3 +1,5 @@
+import {Link} from "react-router-dom";
+
 export const LoginAdmin = () => {
     return (
         <>
@@ -24,6 +26,11 @@ export const LoginAdmin = () => {
 
                     <div className="mb-5">
                         <input type="submit" value={"Iniciar Sesión"} className="w-full px-3 py-2 rounded-lg border font-semibold bg-indigo-600 text-white cursor-pointer hover:bg-indigo-700 transition-colors duration-500"/>
+                    </div>
+
+                    <div className="flex flex-row justify-around">
+                        <Link to="/register" className="text-gray-500 text-sm hover:text-indigo-500 transition-colors duration-500">Crear Cuenta</Link>
+                        <Link to="/forget-password" className="text-gray-500 text-sm  hover:text-indigo-500 transition-colors duration-500">Olvide mi contraseña</Link>
                     </div>
                 </div>
             </div>

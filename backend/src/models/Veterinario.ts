@@ -57,6 +57,10 @@ const veterinarioSchema = new Schema<IVeterinario>({
         type: String,
         nullable: true
     },
+    six_digit_token: {
+        type: String,
+        nullable: true
+    },
     confirmado: {
         type: Boolean,
         default: false

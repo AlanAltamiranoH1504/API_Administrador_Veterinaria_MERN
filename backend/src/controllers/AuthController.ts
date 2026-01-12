@@ -1,14 +1,21 @@
 import {NextFunction, Request, Response} from "express";
-import {email_to_reset_password, generate_jwt} from "../types";
+import {email_to_confirm_account_brevo, email_to_reset_password, generate_jwt} from "../types";
 import {Veterinario} from "../models/Veterinario";
 import {generate_jwt_function} from "../utils/Jwt";
 import {v4 as uuidv4} from "uuid";
-import {email_to_reset_password_function} from "../utils/Emails";
+import {email_to_reset_password_function, sendEmail} from "../utils/Emails";
 import bcrypt from "bcrypt";
 
 export class AuthController {
 
     public async prueba(req: Request, res: Response, next: NextFunction) {
+        const data: email_to_confirm_account_brevo = {
+            token: "1504",
+            email: "altamiranohernandezalan@gmail.com",
+            nombre: "Alan",
+            url: "Prueba"
+        }
+        await sendEmail(data);
         res.status(200).json({
             status: true,
             message: "Funcionando controlador auth"

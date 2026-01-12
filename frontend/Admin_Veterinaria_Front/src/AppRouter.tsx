@@ -13,7 +13,7 @@ export const AppRouter = () => {
                     <Route element={<AuthLayout/>}>
                         <Route path="/" element={<LoginAdmin/>}></Route>
                         <Route path="/register" element={<RegisterAdmin/>}></Route>
-                        <Route path="/confirm-account/:id" element={<ConfirmAccount/>}></Route>
+                        <Route path="/auth/confirmar/:id" element={<ConfirmAccount/>}></Route>
                         <Route path="/forget-password" element={<ForgetPassword/>}></Route>
                     </Route>
                 </Routes>

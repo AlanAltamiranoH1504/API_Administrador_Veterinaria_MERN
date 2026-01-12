@@ -1,5 +1,7 @@
 import nodemailer, {SendMailOptions, Transporter} from "nodemailer"
-import {email_confirm_user, email_to_reset_password} from "../types"
+import * as SibApiV3Sdk from 'sib-api-v3-sdk';
+import client from '../config/Brevo';
+import {email_confirm_user, email_to_confirm_account_brevo, email_to_reset_password} from "../types"
 
 export const email_confirm_user_function = async (data: email_confirm_user) => {
     const transporter: Transporter = nodemailer.createTransport({
@@ -20,8 +22,10 @@ export const email_confirm_user_function = async (data: email_confirm_user) => {
                 <h2 style="color: #2c3e50;">Hola ${data.nombre},</h2>
 
                <p style="font-size: 16px; color: #333;">
-                   Gracias por registrarte en <strong>Admin-Vet</strong>. Para activar tu cuenta, por favor confirma tu dirección de correo electrónico haciendo clic en el siguiente enlace:
+                   Gracias por registrarte en <strong>Admin-Vet</strong>. Para activar tu cuenta, por favor confirma tu dirección de correo electrónico haciendo clic en el siguiente enlace e ingresando el siguiente código:
                </p>
+               
+               <p style="font-size: 20px; color: black; text-align: center; font-weight: bolder; text-transform: uppercase">${data.six_digit_token}</p>
 
                <p style="text-align: center; margin: 30px 0;">
                    <a href="${process.env.FRONTEND_URL}/auth/confirmar/${data.token}" 
@@ -81,3 +85,29 @@ export const email_to_reset_password_function = async (data: email_to_reset_pass
     }
     await transporter.sendMail(email_options);
 }
+
+export const sendEmail = async (data: email_to_confirm_account_brevo) => {
+    const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi(client);
+
+    const sendSmtpEmail: SibApiV3Sdk.SendSmtpEmail = {
+        to: [{ email: data.email }],
+        templateId: 1,
+        params: {
+            nombre: data.nombre,
+            codigo :data.token
+        },
+        sender: {
+            name:  'Tu Empresa',
+            email: 'no-reply@tuempresa.com',
+        },
+    };
+
+    try {
+        const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
+        console.log('Email enviado:', response);
+        return response;
+    } catch (error) {
+        console.error('Error al enviar email:', error.message);
+        throw error;
+    }
+};

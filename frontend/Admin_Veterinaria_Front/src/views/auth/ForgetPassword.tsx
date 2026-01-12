@@ -1,3 +1,5 @@
+import {Link} from "react-router-dom";
+
 export const ForgetPassword = () => {
     return (
         <>
@@ -19,6 +21,11 @@ export const ForgetPassword = () => {
 
                     <div className="mb-5">
                         <input type="submit" value={"Enviar Instrucciones"} className="w-full px-3 py-2 rounded-lg border font-semibold bg-indigo-600 text-white cursor-pointer hover:bg-indigo-700 transition-colors duration-500"/>
+                    </div>
+
+                    <div className="flex flex-row justify-around">
+                        <Link to="/register" className="text-gray-500 text-sm hover:text-indigo-500 transition-colors duration-500">Crear Cuenta</Link>
+                        <Link to="/" className="text-gray-500 text-sm  hover:text-indigo-500 transition-colors duration-500">Inciar Sesión</Link>
                     </div>
                 </div>
             </div>
