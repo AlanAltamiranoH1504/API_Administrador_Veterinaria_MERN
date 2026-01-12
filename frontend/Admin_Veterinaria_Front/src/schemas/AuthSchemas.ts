@@ -8,3 +8,7 @@ export const responseGeneralVeterinario = z.object({
     status: z.boolean(),
     message: z.string()
 });
+export const responseLoginSchema = z.object({
+    status: z.boolean(),
+    token: z.string()
+});
