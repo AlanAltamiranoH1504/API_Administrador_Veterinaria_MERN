@@ -7,7 +7,7 @@ const router = express.Router();
 
 const authController = new AuthController();
 
-router.get("/prueba", jwt_middleware, authController.prueba);
+router.get("/prueba", authController.prueba);
 router.post("/login_user", LoginRequest, authController.login_user);
 router.post("/send_email_to_reset_password", SendEmailToResetPassRequest, authController.send_email_to_reset_password);
 router.post("/save_new_password", SaveNewPasswordRequest, authController.save_new_password);

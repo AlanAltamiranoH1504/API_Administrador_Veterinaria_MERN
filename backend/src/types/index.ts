@@ -10,6 +10,7 @@ export interface IVeterinario extends Document {
     slug: string,
     status: boolean,
     token_confirmacion: string,
+    six_digit_token: string,
     token_reset_password: string,
     confirmado: boolean,
 }
@@ -31,6 +32,7 @@ export type email_confirm_user = {
     apellidos: string,
     email: string,
     token: string
+    six_digit_token: string
 }
 
 export type email_to_reset_password = {
@@ -44,4 +46,12 @@ export type generate_jwt = {
     nombre: string,
     email: string,
     _id: string,
+}
+
+// * Types para emails de brevo
+export type email_to_confirm_account_brevo = {
+    nombre: string,
+    email: string,
+    token: string,
+    url: string
 }

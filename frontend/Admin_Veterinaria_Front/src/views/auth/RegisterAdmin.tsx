@@ -3,11 +3,12 @@ import type {FormRegister} from "../../types";
 import {useMutation} from "@tanstack/react-query";
 import {registerVeterinarioFunction} from "../../services/AuthService.ts";
 import {toast} from "react-toastify";
+import {Link, useNavigate} from "react-router-dom";
 
 export const RegisterAdmin = () => {
 
     const {register, handleSubmit, formState:{errors}} = useForm<FormRegister>();
-
+    const navigate = useNavigate();
     function registerFunction(data: FormRegister) {
         registerVeterinarioMutation.mutate(data);
     }
@@ -16,10 +17,10 @@ export const RegisterAdmin = () => {
         mutationFn: registerVeterinarioFunction,
         onSuccess: () => {
             toast.success("Usuario registrado! Confirma tu cuenta.")
+            navigate("/");
         },
         onError: (error: any) => {
-            toast.error("Ocurrio un error en el registro.")
-            console.log(error)
+            toast.error(error.message);
         }
     })
 
@@ -128,6 +129,11 @@ export const RegisterAdmin = () => {
 
                         <div className="mb-5">
                             <input type={"submit"} value="Registrarse" className="w-full px-3 py-2 border rounded-lg bg-indigo-600 text-lg text-white font-semibold cursor-pointer hover:bg-indigo-700 transition-colors duration-500"/>
+                        </div>
+
+                        <div className="flex flex-row justify-around">
+                            <Link to="/" className="text-gray-500 text-sm hover:text-indigo-500 transition-colors duration-500">Iniciar Sesion</Link>
+                            <Link to="/forget-password" className="text-gray-500 text-sm  hover:text-indigo-500 transition-colors duration-500">Olvide mi contraseña</Link>
                         </div>
                     </form>
                 </div>
