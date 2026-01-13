@@ -4,6 +4,7 @@ import {LoginAdmin} from "./views/auth/LoginAdmin.tsx";
 import {RegisterAdmin} from "./views/auth/RegisterAdmin.tsx";
 import {ConfirmAccount} from "./views/auth/ConfirmAccount.tsx";
 import {ForgetPassword} from "./views/auth/ForgetPassword.tsx";
+import {SaveNewPasswordView} from "./views/auth/SaveNewPasswordView.tsx";
 
 export const AppRouter = () => {
     return (
@@ -15,6 +16,7 @@ export const AppRouter = () => {
                         <Route path="/register" element={<RegisterAdmin/>}></Route>
                         <Route path="/auth/confirmar/:id" element={<ConfirmAccount/>}></Route>
                         <Route path="/forget-password" element={<ForgetPassword/>}></Route>
+                        <Route path="/auth/olvide-password/:id" element={<SaveNewPasswordView/>}></Route>
                     </Route>
                 </Routes>
             </BrowserRouter>

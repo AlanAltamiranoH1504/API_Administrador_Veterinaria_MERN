@@ -17,3 +17,13 @@ export type FormLoginAccount = {
     email: string,
     password: string
 }
+
+export type FormForgetPassword = {
+    email: string;
+}
+export type FormConfirmPassword = {
+    six_digit_token: string,
+    password: string,
+    password_confirmation: string,
+    token: string
+}
