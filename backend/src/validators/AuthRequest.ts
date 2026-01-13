@@ -91,6 +91,10 @@ const SaveNewPasswordRequest = [
     body("token")
         .notEmpty().withMessage("El token de reset es obligatorio")
         .isString().withMessage("El token de reset no es valido"),
+    body("six_digit_token")
+        .notEmpty().withMessage("El codigo de seis digitos es obligatorio")
+        .isString().withMessage("Token de seis digitos no valido")
+        .isLength({min: 6, max: 6}).withMessage("Longitud de otken no valida"),
 
     async (req: Request, res: Response, next: NextFunction) => {
         const error = validationResult(req);
@@ -101,6 +105,7 @@ const SaveNewPasswordRequest = [
         // * Busqueda de usuario para hacer reset
         const user_to_reset = await Veterinario.findOne({
             token_reset_password: req.body.token,
+            six_digit_token: req.body.six_digit_token,
             confirmado: true
         });
         if (!user_to_reset) {

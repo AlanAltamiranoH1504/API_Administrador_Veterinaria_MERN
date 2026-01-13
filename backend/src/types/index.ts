@@ -39,7 +39,8 @@ export type email_to_reset_password = {
     nombre: string,
     apellidos: string,
     email: string,
-    token: string
+    token: string,
+    six_digit_token: string
 }
 
 export type generate_jwt = {
