@@ -3,6 +3,7 @@ import {email_to_confirm_account_brevo, email_to_reset_password, generate_jwt} f
 import {Veterinario} from "../models/Veterinario";
 import {generate_jwt_function} from "../utils/Jwt";
 import {v4 as uuidv4} from "uuid";
+import * as crypto from "node:crypto";
 import {email_to_reset_password_function, sendEmail} from "../utils/Emails";
 import bcrypt from "bcrypt";
 
@@ -51,12 +52,16 @@ export class AuthController {
                 email: req.body.email
             });
             const token_reset = uuidv4();
+            const six_digit_token = crypto.randomBytes(3).toString("hex");
             user_to_reset_password.token_reset_password = token_reset;
+            user_to_reset_password.six_digit_token = six_digit_token;
+
             const data_to_reset_password: email_to_reset_password = {
                 email: req.body.email,
                 nombre: user_to_reset_password.nombre,
                 apellidos: user_to_reset_password.apellidos,
-                token: token_reset
+                token: token_reset,
+                six_digit_token: six_digit_token
             }
             await email_to_reset_password_function(data_to_reset_password);
             await user_to_reset_password.save();
@@ -76,10 +81,12 @@ export class AuthController {
     public async save_new_password(req: Request, res: Response) {
         try {
             const user_to_save_new_password = await Veterinario.findOne({
-                token_reset_password: req.body.token
+                token_reset_password: req.body.token,
+                six_digit_token: req.body.six_digit_token
             });
             const new_password_hash = await bcrypt.hash(req.body.password, 10);
             user_to_save_new_password.token_reset_password = null;
+            user_to_save_new_password.six_digit_token = null;
             user_to_save_new_password.password = new_password_hash;
             await user_to_save_new_password.save();
 
