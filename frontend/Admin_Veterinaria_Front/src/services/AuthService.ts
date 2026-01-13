@@ -6,7 +6,12 @@ import type {
     FormRegister
 } from "../types";
 import {ClientAxios} from "../axios/ClientAxios.ts";
-import {responseGeneralVeterinario, responseLoginSchema, responseRegisterVeterinario} from "../schemas/AuthSchemas.ts";
+import {
+    responseGeneralVeterinario,
+    responseLoginSchema,
+    responseRegisterVeterinario,
+    responseUserInSessionSchema
+} from "../schemas/AuthSchemas.ts";
 import axios from "axios";
 
 export async function registerVeterinarioFunction(data: FormRegister) {
@@ -87,6 +92,27 @@ export async function saveNewPasswordFunction(data: FormConfirmPassword) {
         if (axios.isAxiosError(e)) {
             throw  e.response?.data || {
                 message: "Ocurrio un error en la actualizacion de password"
+            }
+        }
+        throw e;
+    }
+}
+
+export async function userInSessionFunction() {
+    try {
+        const responseAPI =await ClientAxios.get("/auth/show_user_in_sesion", {
+            headers: {
+                "Authorization" : "Bearer " + localStorage.getItem("jwt_veterinaria")
+            }
+        });
+        const resultAPI = responseUserInSessionSchema.safeParse(responseAPI.data);
+        if (resultAPI.success) {
+            return responseAPI.data;
+        }
+    }catch (e) {
+        if (axios.isAxiosError(e)) {
+            throw e.response?.data || {
+                message: "Ocurrio un error en indentificacion de usuario"
             }
         }
         throw e;
