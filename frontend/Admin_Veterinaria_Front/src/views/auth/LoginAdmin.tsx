@@ -1,4 +1,4 @@
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useForm} from "react-hook-form";
 import type {FormLoginAccount} from "../../types";
 import {useMutation} from "@tanstack/react-query";
@@ -7,6 +7,7 @@ import {toast} from "react-toastify";
 
 export const LoginAdmin = () => {
     const {register, handleSubmit, formState:{errors}} = useForm<FormLoginAccount>();
+    const navigate = useNavigate();
 
     function loginFunctionLocal(data: FormLoginAccount) {
         loginMutation.mutate(data);
@@ -16,8 +17,9 @@ export const LoginAdmin = () => {
         mutationKey: ["loginVeterinario"],
         mutationFn: loginFunction,
         onSuccess: (data) => {
-            toast.success("Bievenido!");
+            toast.success("¡Bievenido!");
             localStorage.setItem("jwt_veterinaria", data.token);
+            navigate("/admin");
         },
         onError: (error) => {
             toast.error(error.message);
