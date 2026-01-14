@@ -27,3 +27,12 @@ export type FormConfirmPassword = {
     password_confirmation: string,
     token: string
 }
+
+export type FormSavePaciente = {
+    nombre: string,
+    propietario: string,
+    email_propietario: string,
+    telefono_propietario: string,
+    sintomas: string,
+    status: string
+}
