@@ -1,12 +1,12 @@
 import {useForm} from "react-hook-form";
 import type {FormSavePaciente} from "../../types";
-import {useMutation} from "@tanstack/react-query";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {savePacientePOST} from "../../services/PacienteService.ts";
 import {toast} from "react-toastify";
 
 export const FormularioPacientes = () => {
     const {register, handleSubmit, formState:{errors}, reset} = useForm<FormSavePaciente>();
-
+    const queryCliente = useQueryClient();
     function save_paciente_local(data: FormSavePaciente) {
         savePacienteMutation.mutate(data);
     }
@@ -17,6 +17,9 @@ export const FormularioPacientes = () => {
         onSuccess: (data) => {
             toast.success(data.message);
             reset();
+            queryCliente.invalidateQueries({
+                queryKey: ["listPacientes"]
+            });
         },
         onError: (error) => {
             toast.error(error.message);

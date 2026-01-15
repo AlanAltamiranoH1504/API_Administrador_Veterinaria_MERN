@@ -1,16 +1,35 @@
-import {useQuery} from "@tanstack/react-query";
-import {listPacientesGET} from "../../services/PacienteService.ts";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
+import {deletePacienteDELETE, listPacientesGET} from "../../services/PacienteService.ts";
 import {Page500} from "../Page500.tsx";
 import {format_date} from "../../helpers/helpers.ts";
+import {toast} from "react-toastify";
 
 export const ListadoPacientes = () => {
-
-    const {data, isLoading, isError} = useQuery({
+    const queryCliente = useQueryClient();
+    const {data, isLoading, isError, error} = useQuery({
         queryKey: ["listPacientes"],
         queryFn: () => listPacientesGET(),
         refetchOnWindowFocus: false,
         retry: 1
     });
+
+    function deletePaciente(id: string) {
+        deletePacienteMutation.mutate(id);
+    }
+
+    const deletePacienteMutation = useMutation({
+        mutationKey: ["deletePaciente"],
+        mutationFn: deletePacienteDELETE,
+        onError: (error) => {
+            toast.error(error.message);
+        },
+        onSuccess: () => {
+            toast.success("¡Paciente eliminado correctamente!");
+            queryCliente.invalidateQueries({
+                queryKey: ["listPacientes"]
+            });
+        }
+    })
 
     if (isLoading) {
         return <div>
@@ -21,6 +40,9 @@ export const ListadoPacientes = () => {
     }
 
     if (isError) {
+        if (error.message === "El veterinario no tiene pacientes activos actualmente") {
+            return <><h2 className="text-center text-xl">No tienes pacientes disponibles</h2></>
+        }
         return <Page500/>
     }
 
@@ -45,7 +67,9 @@ export const ListadoPacientes = () => {
                                 <button className="bg-indigo-500 hover:bg-indigo-700 font-semibold cursor-pointer transition-colors duration-500 uppercase text-white px-10 py-2 rounded-lg">
                                     Editar
                                 </button>
-                                <button className="bg-red-500 hover:bg-red-700 font-semibold cursor-pointer transition-colors duration-500 uppercase text-white px-10 py-2 rounded-lg">Eliminar</button>
+                                <button onClick={() => {
+                                    deletePaciente(paciente._id)
+                                }} className="bg-red-500 hover:bg-red-700 font-semibold cursor-pointer transition-colors duration-500 uppercase text-white px-10 py-2 rounded-lg">Eliminar</button>
                             </div>
                         </div>
                     </>

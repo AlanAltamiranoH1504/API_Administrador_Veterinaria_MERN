@@ -44,3 +44,24 @@ export async function listPacientesGET() {
         throw e;
     }
 }
+
+export async function deletePacienteDELETE(id: string) {
+    try {
+        const responseAPI = await ClientAxios.delete(`/pacientes/delete_paciente/${id}`, {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("jwt_veterinaria")
+            }
+        });
+        const resultAPI = responseGeneralPaciente.safeParse(responseAPI.data);
+        if (resultAPI.success) {
+            return responseAPI.data;
+        }
+    }catch (e) {
+        if (axios.isAxiosError(e)) {
+            throw e.response?.data || {
+                message: "Ocurrio un error en la eliminación"
+            }
+        }
+        throw e;
+    }
+}
