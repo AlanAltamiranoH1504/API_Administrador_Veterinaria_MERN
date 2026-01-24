@@ -7,6 +7,8 @@ import {ForgetPassword} from "./views/auth/ForgetPassword.tsx";
 import {SaveNewPasswordView} from "./views/auth/SaveNewPasswordView.tsx";
 import {AppLayout} from "./layouts/AppLayout.tsx";
 import {AdminView} from "./views/admin/AdminView.tsx";
+import {EditProfile} from "./views/admin/EditProfile.tsx";
+import {ChangePassword} from "./views/admin/ChangePassword.tsx";
 
 export const AppRouter = () => {
     return (
@@ -24,6 +26,8 @@ export const AppRouter = () => {
                     {/* Area privada por jwt*/}
                     <Route element={<AppLayout/>}>
                         <Route path="/admin" element={<AdminView/>}></Route>
+                        <Route path="/perfil" element={<EditProfile/>}></Route>
+                        <Route path="/change_password" element={<ChangePassword/>}></Route>
                     </Route>
                 </Routes>
             </BrowserRouter>

@@ -67,4 +67,29 @@ export class VeterinarioController {
             });
         }
     }
+
+    public async update_veterinario(req, res) {
+        try {
+            const id_user_in_session = req.user._id;
+            const user_to_update = await Veterinario.findByIdAndUpdate(id_user_in_session, {
+                $set: {
+                    nombre: req.body.nombre,
+                    apellidos: req.body.apellidos,
+                    email: req.body.email,
+                    telefono: req.body.telefono,
+                    edad: req.body.edad,
+                }
+            });
+            return res.status(200).json({
+                status: true,
+                message: "Veterinario actualizado correctamente",
+            })
+        } catch (e) {
+            return res.status(500).json({
+                status: false,
+                message: "Error en actualizacion de veterinario",
+                error: e.message
+            });
+        }
+    }
 }

@@ -1,6 +1,7 @@
 // * Types para Formularios
 import {z} from "zod";
 import {responseFindPaciente, type responseListPacientes} from "../schemas/PacienteSchemas.ts";
+import type {responseUserInSessionSchema} from "../schemas/AuthSchemas.ts";
 
 export type FormRegister = {
     nombre: string;
@@ -40,6 +41,14 @@ export type FormSavePaciente = {
     status: string
 }
 
+export type FormEditProfile = {
+    nombre: string;
+    apellidos: string;
+    email: string;
+    telefono: string;
+    edad: string;
+}
+
 export type FormEditPaciente = {
     _id: string,
     nombre: string,
@@ -52,3 +61,4 @@ export type FormEditPaciente = {
 
 export type ListPacientes = z.infer<typeof responseListPacientes>;
 export type FindPaciente = z.infer<typeof responseFindPaciente>;
+export type UserInSession = z.infer<typeof responseUserInSessionSchema>

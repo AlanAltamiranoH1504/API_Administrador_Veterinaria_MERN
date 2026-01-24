@@ -83,7 +83,52 @@ const ConfirmVeterinarioRquest = [
     }
 ];
 
+const UpdateVeterinarioRequest = [
+    body("nombre")
+        .notEmpty().withMessage("El nombre es obligatorio")
+        .isString().withMessage("El nombre debe ser una cadena de texto")
+        .isLength({min: 1, max: 255}).withMessage("La longitud maxima del nombre es de 255 caracteres"),
+    body("apellidos")
+        .notEmpty().withMessage("Los apellidos son obligatorios")
+        .isString().withMessage("Los apellidos debe ser una cadena de texto")
+        .isLength({min: 1, max: 255}).withMessage("La longitud maxima de los apellidos es de 255 caracteres"),
+    body("email")
+        .notEmpty().withMessage("El email es obligatorio")
+        .isEmail().withMessage("Formato de email no valido")
+        .isString().withMessage("Formato de email no valido"),
+    body("telefono")
+        .isString().withMessage("El numero de telefono debe ser una cadena de numeros")
+        .isLength({min: 10}).withMessage("El numero debe tener al menos 10 caracteres (55 1234 5678)"),
+    body("edad")
+        .notEmpty().withMessage("La edad es obligatorio")
+        .isNumeric().withMessage("El edad debe ser un numero entero"),
+
+    async (req, res, next) => {
+        const errores = validationResult(req);
+        if (!errores.isEmpty()) {
+            const errors_array = errores.array().map((error) => {
+                return error.msg
+            });
+            return res.status(409).json(
+                errors_array
+            );
+        }
+
+        //Validacion de email no usado
+        const email_in_use = await Veterinario.findOne({email: req.body.email});
+        if (email_in_use && email_in_use._id.toString() !== req.user._id.toString()) {
+            console.log("Entro a esta zona")
+            return res.status(409).json({
+                status: false,
+                message: "El email ya se encuentra registrado"
+            });
+        }
+        next();
+    }
+];
+
 export {
     CreateVeterinarioRequest,
-    ConfirmVeterinarioRquest
+    ConfirmVeterinarioRquest,
+    UpdateVeterinarioRequest
 }
