@@ -1,5 +1,6 @@
 import {Document} from 'mongoose';
 import * as mongoose from "mongoose";
+
 export interface IVeterinario extends Document {
     nombre: string,
     apellidos: string,

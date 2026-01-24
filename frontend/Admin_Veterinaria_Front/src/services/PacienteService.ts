@@ -1,7 +1,7 @@
 import type {FormSavePaciente} from "../types";
 import axios from "axios";
 import {ClientAxios} from "../axios/ClientAxios.ts";
-import {responseGeneralPaciente, responseListPacientes} from "../schemas/PacienteSchemas.ts";
+import {responseFindPaciente, responseGeneralPaciente, responseListPacientes} from "../schemas/PacienteSchemas.ts";
 
 export async function savePacientePOST(data: FormSavePaciente) {
     try {
@@ -60,6 +60,27 @@ export async function deletePacienteDELETE(id: string) {
         if (axios.isAxiosError(e)) {
             throw e.response?.data || {
                 message: "Ocurrio un error en la eliminación"
+            }
+        }
+        throw e;
+    }
+}
+
+export async function findPacienteByIdGET(id: string) {
+    try {
+        const responseAPI = await ClientAxios.get(`/pacientes/find_paciente/${id}`, {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("jwt_veterinaria")
+            }
+        });
+        const resultAPI = responseFindPaciente.safeParse(responseAPI.data);
+        if (resultAPI.success) {
+            return responseAPI.data;
+        }
+    } catch (e) {
+        if (axios.isAxiosError(e)) {
+            throw e.response?.data || {
+                message: "Ocurrio un error en la busqueda del paciente"
             }
         }
         throw e;

@@ -20,4 +20,24 @@ export const responseListPacientes = z.object({
             veterinario: z.string(),
         })
     )
-})
+});
+
+export const responseFindPaciente = z.object({
+    status: z.boolean(),
+    paciente: z.object({
+        _id: z.string(),
+        nombre: z.string(),
+        propietario: z.string(),
+        email_propietario: z.string(),
+        telefono_propietario: z.string(),
+        fecha_ingreso: z.string(),
+        sintomas: z.string(),
+        status: z.string(),
+        veterinario: z.object({
+            _id: z.string(),
+            nombre: z.string(),
+            apellidos: z.string(),
+            email: z.string()
+        })
+    })
+});

@@ -16,12 +16,12 @@ import axios from "axios";
 
 export async function registerVeterinarioFunction(data: FormRegister) {
     try {
-         const responseAPI = await ClientAxios.post("/veterinarios/save_veterinario", data);
+        const responseAPI = await ClientAxios.post("/veterinarios/save_veterinario", data);
         const resultAPI = responseRegisterVeterinario.safeParse(responseAPI.data);
         if (resultAPI.success) {
             return true;
         }
-    }catch (e) {
+    } catch (e) {
         if (axios.isAxiosError(e)) {
             throw e.response?.data || {
                 message: "Error en registro de cuenta"
@@ -30,14 +30,14 @@ export async function registerVeterinarioFunction(data: FormRegister) {
     }
 }
 
-export async  function  confirmVeterinarioFunction(data: FormConfirmAccount) {
+export async function confirmVeterinarioFunction(data: FormConfirmAccount) {
     try {
         const responseAPI = await ClientAxios.post("/veterinarios/confirm_veterinario", data);
         const resultAPI = responseGeneralVeterinario.safeParse(responseAPI.data);
         if (resultAPI.success) {
             return responseAPI.data;
         }
-    }catch (e) {
+    } catch (e) {
         if (axios.isAxiosError(e)) {
             throw e.response?.data || {
                 message: "Error en confirmación de cuenta"
@@ -54,9 +54,9 @@ export async function loginFunction(data: FormLoginAccount) {
         if (resultAPI.success) {
             return responseAPI.data;
         }
-    }catch (e) {
+    } catch (e) {
         if (axios.isAxiosError(e)) {
-            throw e.response?.data ||  {
+            throw e.response?.data || {
                 message: "Ocurrio un error en el inicio de sesion"
             }
         }
@@ -71,7 +71,7 @@ export async function forgePasswordFunction(data: FormForgetPassword) {
         if (resultAPI.success) {
             return responseAPI.data;
         }
-    }catch (e) {
+    } catch (e) {
         if (axios.isAxiosError(e)) {
             throw e.response?.data || {
                 message: "Ocurrio un error en la recuperación de contraseña"
@@ -88,9 +88,9 @@ export async function saveNewPasswordFunction(data: FormConfirmPassword) {
         if (resultAPI.success) {
             return responseAPI.data;
         }
-    }catch (e) {
+    } catch (e) {
         if (axios.isAxiosError(e)) {
-            throw  e.response?.data || {
+            throw e.response?.data || {
                 message: "Ocurrio un error en la actualizacion de password"
             }
         }
@@ -100,16 +100,16 @@ export async function saveNewPasswordFunction(data: FormConfirmPassword) {
 
 export async function userInSessionFunction() {
     try {
-        const responseAPI =await ClientAxios.get("/auth/show_user_in_sesion", {
+        const responseAPI = await ClientAxios.get("/auth/show_user_in_sesion", {
             headers: {
-                "Authorization" : "Bearer " + localStorage.getItem("jwt_veterinaria")
+                "Authorization": "Bearer " + localStorage.getItem("jwt_veterinaria")
             }
         });
         const resultAPI = responseUserInSessionSchema.safeParse(responseAPI.data);
         if (resultAPI.success) {
             return responseAPI.data;
         }
-    }catch (e) {
+    } catch (e) {
         if (axios.isAxiosError(e)) {
             throw e.response?.data || {
                 message: "Ocurrio un error en indentificacion de usuario"
