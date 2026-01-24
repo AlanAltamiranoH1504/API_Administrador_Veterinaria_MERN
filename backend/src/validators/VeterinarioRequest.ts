@@ -1,6 +1,7 @@
 import {body, validationResult} from "express-validator";
 import {Request, Response, NextFunction} from "express";
 import {Veterinario} from "../models/Veterinario";
+import bcrypt from "bcrypt";
 
 const CreateVeterinarioRequest = [
     body("nombre")
@@ -127,8 +128,39 @@ const UpdateVeterinarioRequest = [
     }
 ];
 
+const ChangePasswordRequest = [
+    body("new_password")
+        .notEmpty().withMessage("El nuevo password es obligatorio")
+        .isString().withMessage("El nuevo password no valido")
+        .isLength({min: 6}).withMessage("El password debe tener al menos 6 caracteres"),
+    body("old_password")
+        .notEmpty().withMessage("La antiguia contraseña es obligatoria")
+        .isString().withMessage("Formato de antigua password no valida"),
+
+    async (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const errors_array = errors.array().map((error) => {
+                return error.msg;
+            });
+            return res.status(409).json(errors_array);
+        }
+
+        const user_to_change_password = await Veterinario.findById(req.user._id);
+        const verify_password = await bcrypt.compare(req.body.old_password, user_to_change_password.password);
+        if (!verify_password) {
+            return res.status(401).json({
+                status: false,
+                message: "Password antigua incorrecta"
+            });
+        }
+        next();
+    }
+]
+
 export {
     CreateVeterinarioRequest,
     ConfirmVeterinarioRquest,
-    UpdateVeterinarioRequest
+    UpdateVeterinarioRequest,
+    ChangePasswordRequest
 }

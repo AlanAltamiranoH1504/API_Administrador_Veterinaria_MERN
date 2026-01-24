@@ -92,4 +92,26 @@ export class VeterinarioController {
             });
         }
     }
+
+    public async change_password(req, res) {
+        try {
+            const id_user_in_session = req.user._id;
+            const password_hash = await bcrypt.hash(req.body.new_password, 10);
+            const user_to_change_password = await Veterinario.findByIdAndUpdate(id_user_in_session, {
+                $set: {
+                    password: password_hash
+                }
+            });
+            return res.status(200).json({
+                status: true,
+                message: "Datos actualizados correctamente",
+            })
+        } catch (e) {
+            return res.status(500).json({
+                status: false,
+                message: "Error en actualizacion de password",
+                error: e.message
+            });
+        }
+    }
 }

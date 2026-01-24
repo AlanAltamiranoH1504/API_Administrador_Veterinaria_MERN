@@ -1,6 +1,7 @@
 import express from "express";
 import {VeterinarioController} from "../controllers/VeterinarioController";
 import {
+    ChangePasswordRequest,
     ConfirmVeterinarioRquest,
     CreateVeterinarioRequest,
     UpdateVeterinarioRequest
@@ -13,5 +14,6 @@ const veterinarioController = new VeterinarioController();
 router.post("/save_veterinario", CreateVeterinarioRequest, veterinarioController.save_veterinario);
 router.post("/confirm_veterinario", ConfirmVeterinarioRquest, veterinarioController.confirm_veterinario);
 router.put("/update_veterinario", jwt_middleware, UpdateVeterinarioRequest, veterinarioController.update_veterinario);
+router.put("/change_password", jwt_middleware, ChangePasswordRequest, veterinarioController.change_password);
 
 export default router;

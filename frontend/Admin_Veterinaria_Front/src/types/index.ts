@@ -59,6 +59,12 @@ export type FormEditPaciente = {
     status: string
 }
 
+export type FormChangePassword = {
+    old_password: string,
+    new_password: string,
+    confirm_password: string,
+}
+
 export type ListPacientes = z.infer<typeof responseListPacientes>;
 export type FindPaciente = z.infer<typeof responseFindPaciente>;
 export type UserInSession = z.infer<typeof responseUserInSessionSchema>
