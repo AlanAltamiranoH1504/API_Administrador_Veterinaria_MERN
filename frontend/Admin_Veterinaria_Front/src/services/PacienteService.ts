@@ -1,4 +1,4 @@
-import type {FormSavePaciente} from "../types";
+import type {FormEditPaciente, FormSavePaciente} from "../types";
 import axios from "axios";
 import {ClientAxios} from "../axios/ClientAxios.ts";
 import {responseFindPaciente, responseGeneralPaciente, responseListPacientes} from "../schemas/PacienteSchemas.ts";
@@ -14,7 +14,7 @@ export async function savePacientePOST(data: FormSavePaciente) {
         if (resultAPI.success) {
             return responseAPI.data;
         }
-    }catch (e) {
+    } catch (e) {
         if (axios.isAxiosError(e)) {
             throw e.response?.data || {
                 message: "Ocurrio un error en el registro del paciente"
@@ -35,7 +35,7 @@ export async function listPacientesGET() {
         if (resultAPI.success) {
             return responseAPI.data;
         }
-    }catch (e) {
+    } catch (e) {
         if (axios.isAxiosError(e)) {
             throw e.response?.data || {
                 message: "Ocurrio un error en el listado de pacientes"
@@ -56,7 +56,7 @@ export async function deletePacienteDELETE(id: string) {
         if (resultAPI.success) {
             return responseAPI.data;
         }
-    }catch (e) {
+    } catch (e) {
         if (axios.isAxiosError(e)) {
             throw e.response?.data || {
                 message: "Ocurrio un error en la eliminación"
@@ -81,6 +81,27 @@ export async function findPacienteByIdGET(id: string) {
         if (axios.isAxiosError(e)) {
             throw e.response?.data || {
                 message: "Ocurrio un error en la busqueda del paciente"
+            }
+        }
+        throw e;
+    }
+}
+
+export async function updatePacientePUT(data: FormEditPaciente) {
+    try {
+        const responseAPI = await ClientAxios.put(`/pacientes/update_paciente/${data._id}`, data, {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("jwt_veterinaria")
+            }
+        });
+        const resultAPI = responseGeneralPaciente.safeParse(responseAPI.data);
+        if (resultAPI.success) {
+            return responseAPI.data;
+        }
+    } catch (e) {
+        if (axios.isAxiosError(e)) {
+            throw e.response?.data || {
+                message: "Ocurrio un error en la actualizacion del paciente"
             }
         }
         throw e;

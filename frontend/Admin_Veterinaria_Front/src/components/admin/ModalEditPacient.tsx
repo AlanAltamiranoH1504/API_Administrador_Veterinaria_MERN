@@ -2,6 +2,9 @@ import Modal from "react-modal";
 import {useForm} from "react-hook-form";
 import type {FindPaciente, FormEditPaciente} from "../../types";
 import {useEffect} from "react";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {updatePacientePUT} from "../../services/PacienteService.ts";
+import {toast} from "react-toastify";
 
 const stylesModal = {
     content: {
@@ -22,6 +25,7 @@ type ModalEditPacientProps = {
 export const ModalEditPacient = ({isOpen, closeModal, pacienteAPI}: ModalEditPacientProps) => {
 
     const {register, handleSubmit, formState: {errors}, setValue} = useForm<FormEditPaciente>();
+    const queryClient = useQueryClient();
     useEffect(() => {
         if (!pacienteAPI?.paciente) return;
 
@@ -33,9 +37,24 @@ export const ModalEditPacient = ({isOpen, closeModal, pacienteAPI}: ModalEditPac
         setValue("status", pacienteAPI!.paciente!.status);
     }, [pacienteAPI, setValue]);
 
-    function updatePacienteLocal() {
-        console.log("Actualizando paciente")
+    function updatePacienteLocal(data: FormEditPaciente) {
+        data._id = pacienteAPI!.paciente!._id;
+        updatePacienteMutation.mutate(data);
     }
+
+    const updatePacienteMutation = useMutation({
+        mutationKey: [`updatePaciente`],
+        mutationFn: updatePacientePUT,
+        onError: (error) => {
+            toast.error(error.message);
+        },
+        onSuccess: () => {
+            toast.success("Paciente actualizado correctamente!");
+            queryClient.invalidateQueries({
+                queryKey: ["listPacientes"]
+            });
+        }
+    });
 
     return (
         <>
@@ -139,7 +158,7 @@ export const ModalEditPacient = ({isOpen, closeModal, pacienteAPI}: ModalEditPac
                         <div className="flex justify-center">
                             <input type="submit"
                                    className="px-3 py-2 bg-indigo-500 cursor-pointer text-center font-semibold rounded-lg hover:bg-indigo-600 transition-colors duration-500 text-white"
-                                   value="Agregar Paciente"/>
+                                   value="Actualizar Paciente"/>
                         </div>
                     </form>
                 </div>
